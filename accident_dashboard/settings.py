@@ -130,17 +130,35 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django_mongodb_backend.fields.ObjectIdField'
 
 # --- TEMPORARY ADMIN CREATION ---
-from django.db.models.signals import post_migrate
-from django.dispatch import receiver
-from django.contrib.auth import get_user_model
+# --- FORCED ADMIN CREATION ---
+# --- EMERGENCY ADMIN CREATION ---
+import django
+from django.db import connection
 
-@receiver(post_migrate)
-def create_admin_user(sender, **kwargs):
+def create_admin_now():
+    from django.contrib.auth import get_user_model
     User = get_user_model()
-    if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser(
-            username='admin',
-            email='admin@example.com',
-            password='Password123'  # You can change this
-        )
-        print("Admin user created successfully!")
+    # Use 'get_or_create' to be safe with multiple workers
+    user, created = User.objects.get_or_create(
+        username='admin',
+        defaults={'email': 'admin@example.com', 'is_staff': True, 'is_superuser': True}
+    )
+    if created:
+        user.set_password('Password123')
+        user.save()
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print("ADMIN USER CREATED SUCCESSFULLY")
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    else:
+        print("Admin user already exists.")
+
+# This forces it to run every time settings are loaded
+try:
+    django.setup()
+    create_admin_now()
+except Exception as e:
+    print(f"Admin creation error: {e}")
+
+
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'

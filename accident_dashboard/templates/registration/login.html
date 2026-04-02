@@ -85,7 +85,7 @@
         <h3 class="text-center mb-3">Welcome Back 👋</h3>
         <p class="text-center text-muted">Login to your dashboard</p>
 
-        <form method="post">
+        <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
 
             <div class="mb-3">
