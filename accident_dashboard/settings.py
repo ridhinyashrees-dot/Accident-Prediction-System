@@ -128,3 +128,19 @@ ALLOWED_HOSTS = ['*']
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django_mongodb_backend.fields.ObjectIdField'
+
+# --- TEMPORARY ADMIN CREATION ---
+from django.db.models.signals import post_migrate
+from django.dispatch import receiver
+from django.contrib.auth import get_user_model
+
+@receiver(post_migrate)
+def create_admin_user(sender, **kwargs):
+    User = get_user_model()
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser(
+            username='admin',
+            email='admin@example.com',
+            password='Password123'  # You can change this
+        )
+        print("Admin user created successfully!")
