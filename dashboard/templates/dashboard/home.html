@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Accident Prediction Dashboard</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- DataLabels Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+    <style>
+       body {
+         font-family: Arial;
+         text-align: center;
+         color: white;
+         margin: 0;
+         height: 100vh;
+
+    /* Gradient background */
+        background: linear-gradient(-45deg, #1e3c72, #2a5298, #4ca1af, #2c3e50);
+        background-size: 400% 400%;
+
+    /* Animation */
+        animation: gradientBG 10s ease infinite;
+        }
+
+      
+        
+
+
+        .container {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .card {
+            background: white;
+            color: black;
+            width: 500px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 20px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            text-shadow: 0px 0px 10px rgba(255,255,255,0.7);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        canvas {
+            margin-top: 10px;
+        }
+        .container {
+           background: rgba(255, 255, 255, 0.15);
+           backdrop-filter: blur(10px);
+           padding: 20px;
+           border-radius: 15px;
+           width: 80%;
+           margin: auto;
+           margin-top: 30px;
+           color: white;
+        }
+        button {
+           transition: 0.3s;
+        }
+
+        button:hover {
+           transform: scale(1.1);
+           background-color: #eea679;
+        }
+        @keyframes gradientBG {
+         0% {
+             background-position: 0% 50%;
+            }
+        50% {
+             background-position: 100% 50%;
+            }
+        100% {
+             background-position: 0% 50%;
+            }
+        }
+
+
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🚦 Accident Prediction System</h1>
+
+    <div class="card">
+        <h2>Prediction: {{ prediction }}</h2>
+
+        <div style="width: 400px; height: 400px; margin: auto;">
+            <canvas id="pieChart"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+
+const labels = {{ labels|safe }};
+const values = {{ values|safe }};
+const colors = {{ colors|safe }};
+
+const data = {
+    labels: labels,
+    datasets: [{
+        data: values,
+        backgroundColor: colors
+
+    }]
+};
+
+const config = {
+    type: 'pie',
+    data: data,
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            datalabels: {
+                color: 'black',
+                formatter: (value, context) => {
+                    let total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                    return ((value / total) * 100).toFixed(1) + "%";
+                },
+                font: {
+                    weight: 'bold',
+                    size: 14
+                }
+            }
+        }
+    },
+    plugins: [ChartDataLabels]
+};
+
+new Chart(
+    document.getElementById('pieChart'),
+    config
+);
+
+
+</script>
+<center>
+<a href="/form/" style="color: rgb(252, 69, 233);"><button>➕ Add New Accident Data</button></a>
+</center>
+</body>
+
+</html>
