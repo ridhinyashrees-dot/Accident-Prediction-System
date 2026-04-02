@@ -79,9 +79,9 @@ WSGI_APPLICATION = 'accident_dashboard.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django_mongodb_backend',
+        'NAME': 'accident_db',
+        'HOST': 'mongodb+srv://ridhinyashrees_db_user:ICPz5lmFNVdkvski@cluster0.k9mo670.mongodb.net/?appName=Cluster0'
 }
 
 
