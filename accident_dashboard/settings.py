@@ -82,6 +82,7 @@ DATABASES = {
         'ENGINE': 'django_mongodb_backend',
         'NAME': 'accident_db',
         'HOST': 'mongodb+srv://ridhinyashrees_db_user:ICPz5lmFNVdkvski@cluster0.k9mo670.mongodb.net/?appName=Cluster0'
+    }
 }
 
 
